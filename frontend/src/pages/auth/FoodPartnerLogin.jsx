@@ -1,27 +1,46 @@
 import React from 'react';
 import '../../styles/auth-shared.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useState } from 'react';
 
 const FoodPartnerLogin = () => {
 
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false)
 
-    //   const handleSubmit = async (e) => {
-    //     e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    //     const email = e.target.email.value;
-    //     const password = e.target.password.value;
+        try {
+            setLoading(true)
 
-    //     const response = await axios.post("http://localhost:3000/api/auth/food-partner/login", {
-    //       email,
-    //       password
-    //     }, { withCredentials: true });
+            const email = e.target.email.value;
+            const password = e.target.password.value;
 
-    //     console.log(response.data);
+            const res = await axios.post("http://localhost:3000/api/v1/user/food-partner/login", {
+                email,
+                password
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true
+            });
 
-    //     navigate("/create-food"); // Redirect to create food page after login
+            if (res.data.success) {
+                console.log(res.data)
+                navigate("/create-food")
+            }
+        } catch (error) {
+            console.log("login error", error)
+        } finally {
+            setLoading(false)
+        }
 
-    //   };
+    };
+
+
 
     return (
         <div className="auth-page-wrapper">
@@ -30,7 +49,7 @@ const FoodPartnerLogin = () => {
                     <h1 id="partner-login-title" className="auth-title">Partner login</h1>
                     <p className="auth-subtitle">Access your dashboard and manage orders.</p>
                 </header>
-                <form className="auth-form" noValidate>
+                <form className="auth-form" onSubmit={handleSubmit} noValidate>
                     <div className="field-group">
                         <label htmlFor="email">Email</label>
                         <input id="email" name="email" type="email" placeholder="business@example.com" autoComplete="email" />
@@ -39,7 +58,11 @@ const FoodPartnerLogin = () => {
                         <label htmlFor="password">Password</label>
                         <input id="password" name="password" type="password" placeholder="Password" autoComplete="current-password" />
                     </div>
-                    <button className="auth-submit" type="submit">Sign In</button>
+                    <button className="auth-submit" type="submit">
+                        {
+                            loading ? "Loading..." : "Sign In"
+                        }
+                    </button>
                 </form>
                 <div className="auth-alt-action">
                     New partner? <a href="/food-partner/register">Create an account</a>

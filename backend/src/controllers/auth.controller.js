@@ -203,7 +203,10 @@ export const registerFoodPartner = async (req, res) => {
             foodPartner: {
                 _id: newFoodPartner?._id,
                 fullName: newFoodPartner?.name,
-                email: newFoodPartner?.email
+                email: newFoodPartner?.email,
+                contactName: newFoodPartner?.contactName,
+                phone: newFoodPartner?.phone,
+                address: newFoodPartner?.address
             }
         })
 

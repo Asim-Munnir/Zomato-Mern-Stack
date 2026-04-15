@@ -2,34 +2,50 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/auth-shared.css';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios"
+import { useState } from 'react';
 
 const UserRegister = () => {
 
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false)
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    //     const firstName = e.target.firstName.value;
-    //     const lastName = e.target.lastName.value;
-    //     const email = e.target.email.value;
-    //     const password = e.target.password.value;
+        try {
+            setLoading(true)
+
+            const firstName = e.target.firstName.value;
+            const lastName = e.target.lastName.value;
+            const email = e.target.email.value;
+            const password = e.target.password.value;
 
 
-    //     const response = await axios.post("http://localhost:3000/api/auth/user/register", {
-    //         fullName: firstName + " " + lastName,
-    //         email,
-    //         password
-    //     },
-    //     {
-    //         withCredentials: true
-    //     })
+            const res = await axios.post("http://localhost:3000/api/v1/user/register", {
+                fullName: firstName + " " + lastName,
+                email,
+                password
+            },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    withCredentials: true
+                })
 
-    //     console.log(response.data);
+            if (res.data.success) {
+                console.log(res.data);
+                navigate("/home")
+            }
 
-    //     navigate("/")
+        } catch (error) {
+            console.log("login error", error)
+        } finally{
+            setLoading(false)
+        }
 
-    // };
+    };
 
     return (
         <div className="auth-page-wrapper">
@@ -41,7 +57,7 @@ const UserRegister = () => {
                 <nav className="auth-alt-action" style={{ marginTop: '-4px' }}>
                     <strong style={{ fontWeight: 600 }}>Switch:</strong> <Link to="/user/register">User</Link> • <Link to="/food-partner/register">Food partner</Link>
                 </nav>
-                <form className="auth-form" noValidate>
+                <form className="auth-form" onSubmit={handleSubmit} noValidate>
                     <div className="two-col">
                         <div className="field-group">
                             <label htmlFor="firstName">First Name</label>
@@ -60,7 +76,11 @@ const UserRegister = () => {
                         <label htmlFor="password">Password</label>
                         <input id="password" name="password" type="password" placeholder="••••••••" autoComplete="new-password" />
                     </div>
-                    <button className="auth-submit" type="submit">Sign Up</button>
+                    <button className="auth-submit" type="submit">
+                        {
+                            loading ? "loading..." : "Sign Up"
+                        }
+                    </button>
                 </form>
                 <div className="auth-alt-action">
                     Already have an account? <Link to="/user/login">Sign in</Link>
