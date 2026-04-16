@@ -84,7 +84,7 @@ export const getFoodItems = async (req, res) => {
 
         const foodItems = await FoodItem.find({})
 
-        if (!getFoodItems) {
+        if (!foodItems) {
             return res.status(200).json({
                 success: true,
                 foodItems: []
