@@ -6,6 +6,7 @@ import cors from "cors"
 // import routes here
 import authRoute from "./routes/auth.routes.js"
 import foodRoute from "./routes/food.routes.js"
+import foodPartnerRoute from "./routes/food-partner.routes.js"
 
 
 const app = express()
@@ -32,6 +33,7 @@ app.get("/", (_, res) => {
 
 app.use("/api/v1/user", authRoute)
 app.use("/api/v1/food", foodRoute)
+app.use("/api/v1/food-partner", foodPartnerRoute)
 
 
 export default app
