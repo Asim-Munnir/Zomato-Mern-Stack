@@ -9,6 +9,7 @@ const Profile = () => {
     const [profile, setProfile] = useState(null)
     const [videos, setVideos] = useState([])
     const [loading, setLoading] = useState(true)
+    const [videoLoading, setVideoLoading] = useState({})
 
     const getProfile = async () => {
         try {
@@ -93,12 +94,24 @@ const Profile = () => {
             <section className="profile-grid">
                 {videos.map((v) => (
                     <div key={v._id} className="profile-grid-item">
+
+                        {/* Loader */}
+                        {!videoLoading[v._id] && (
+                            <div className="video-loader"></div>
+                        )}
+
                         <video
                             className="profile-grid-video"
                             src={v.video}
                             muted
                             loop
                             preload="metadata"
+                            onLoadedData={() =>
+                                setVideoLoading((prev) => ({
+                                    ...prev,
+                                    [v._id]: true
+                                }))
+                            }
                             onMouseEnter={(e) => e.target.play()}
                             onMouseLeave={(e) => {
                                 e.target.pause()
