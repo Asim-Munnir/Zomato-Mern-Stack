@@ -2,6 +2,8 @@ import cloudinary from "../../utils/cloudinary.js";
 import getDataUri from "../../utils/datauri.js";
 import { FoodItem } from "../models/fooditem.model.js";
 import { FoodPartner } from "../models/foodpartner.model.js";
+import { Like } from "../models/likes.model.js";
+import { Save } from "../models/save.model.js";
 
 
 export const createFood = async (req, res) => {
@@ -99,6 +101,102 @@ export const getFoodItems = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
+    }
+}
+
+export const likeFood = async (req, res) => {
+    try {
+        const { foodId } = req.body;
+        const user = req.user;
+
+        const existingLike = await Like.findOne({
+            user: user._id,
+            food: foodId
+        });
+
+        if (existingLike) {
+            await Like.deleteOne({
+                user: user._id,
+                food: foodId
+            });
+
+            await FoodItem.findByIdAndUpdate(foodId, {
+                $inc: { likeCount: -1 }
+            })
+
+            return res.status(200).json({
+                success: true,
+                message: "Unliked successfully"
+            });
+        }
+
+        await Like.create({
+            user: user._id,
+            food: foodId
+        });
+
+        await FoodItem.findByIdAndUpdate(foodId, {
+            $inc: { likeCount: 1 }
+        })
+
+        return res.status(201).json({
+            success: true,
+            message: "Liked successfully"
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
+    }
+};
+
+export const saveFood = async (req, res) => {
+    try {
+        const { foodId } = req.body
+        const user = req.user
+
+        const isAlreadySavedFood = await Save.findOne({ user: user?._id, food: foodId })
+
+        if (isAlreadySavedFood) {
+            await Save.deleteOne({
+                user: user._id,
+                food: foodId
+            });
+
+            await FoodItem.findByIdAndUpdate(foodId, {
+                $inc: { savesCount: -1 }
+            })
+
+            return res.status(200).json({
+                success: true,
+                message: "UnSaved successfully"
+            });
+        }
+
+        const save = await Save.create({
+            user: user._id,
+            food: foodId
+        })
+
+        await FoodItem.findByIdAndUpdate(foodId, {
+            $inc: { savesCount: 1 }
+        })
+
+        return res.status(201).json({
+            success: true,
+            message: "Saved successfully",
+            save
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
             success: false,
             message: "Server Error"
         });

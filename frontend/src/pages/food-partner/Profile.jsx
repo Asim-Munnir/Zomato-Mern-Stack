@@ -55,7 +55,7 @@ const Profile = () => {
                 <div className="profile-meta">
                     <img
                         className="profile-avatar"
-                        src="https://images.unsplash.com/photo-1754653099086-3bddb9346d37"
+                        src="https://marketplace.canva.com/EAGiLZb47bU/2/0/1600w/canva-red-and-white-illustrated-chef-catering-logo-6Hn44n3qcaU.jpg"
                         alt="profile"
                     />
 
