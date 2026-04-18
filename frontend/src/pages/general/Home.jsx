@@ -19,25 +19,30 @@ const Home = () => {
       .catch(() => { /* noop: optionally handle error */ })
   }, [])
 
-  function likeVideo(item) {
-    setVideos((prev) =>
-      prev.map((v) =>
-        v._id === item._id
-          ? { ...v, likeCount: v.likeCount + 1 }
-          : v
-      )
-    )
+  async function likeVideo(item) {
+
+    const response = await axios.post("http://localhost:3000/api/v1/food/like", { foodId: item._id }, { withCredentials: true })
+
+    if (response.data.like) {
+      console.log("Video liked");
+      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
+    } else {
+      console.log("Video unliked");
+      setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v))
+    }
+
   }
 
-  function saveVideo(item) {
-    setVideos((prev) =>
-      prev.map((v) =>
-        v._id === item._id
-          ? { ...v, savesCount: v.savesCount + 1 }
-          : v
-      )
-    )
-  }
+  async function saveVideo(item) {
+        const response = await axios.post("http://localhost:3000/api/v1/food/save", { foodId: item._id }, { withCredentials: true })
+        
+        if(response.data.save){
+            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))
+        }else{
+            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount - 1 } : v))
+        }
+    }
+
 
   return (
     <ReelFeed

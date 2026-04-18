@@ -133,7 +133,7 @@ export const likeFood = async (req, res) => {
             });
         }
 
-        await Like.create({
+        const like = await Like.create({
             user: user._id,
             food: foodId
         });
@@ -144,7 +144,8 @@ export const likeFood = async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: "Liked successfully"
+            message: "Liked successfully",
+            like
         });
 
     } catch (error) {
