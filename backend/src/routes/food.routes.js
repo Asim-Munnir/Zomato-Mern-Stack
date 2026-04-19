@@ -1,6 +1,6 @@
 import express from "express"
 import authMiddleware from "../middlewares/isAuthenticated.js"
-import { createFood, getFoodItems, likeFood, saveFood } from "../controllers/food.controller.js"
+import { createFood, getFoodItems, getSavedFoods, likeFood, saveFood } from "../controllers/food.controller.js"
 import multer from "multer"
 
 const router = express.Router()
@@ -14,6 +14,7 @@ router.route("/").post(authMiddleware.isFoodPartnerAuthenticated, upload.single(
 router.route("/getFoodItems").get(authMiddleware.isUserAuthenticated, getFoodItems)
 router.route("/like").post(authMiddleware.isUserAuthenticated, likeFood)
 router.route("/save").post(authMiddleware.isUserAuthenticated, saveFood)
+router.route("/getSavedFood").get(authMiddleware.isUserAuthenticated, getSavedFoods)
 
 
 export default router

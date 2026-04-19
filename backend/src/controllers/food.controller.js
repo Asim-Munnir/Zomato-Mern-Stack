@@ -203,3 +203,39 @@ export const saveFood = async (req, res) => {
         });
     }
 }
+
+
+export const getSavedFoods = async (req, res) => {
+    try {
+        const userId = req.user?._id;
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "User Id Is Required"
+            })
+        }
+
+        const savedFoods = await Save.find({ user: userId }).populate("food")
+
+        if (!savedFoods || savedFoods.length === 0) {
+            return res.status(200).json({
+                success: true,
+                message: "No saved foods found",
+                savedFoods: []
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Saved foods retrieved successfully",
+            savedFoods
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
+    }
+}

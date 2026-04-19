@@ -2,42 +2,98 @@
 
 .bottom-nav {
   position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: 56px;
-   background: color-mix(in srgb, #000 35%, transparent);
-  backdrop-filter: blur(2px);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,.15);
-  box-shadow: var(--shadow-md);
-  border-top: 1px solid var(--color-border);
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px; /* 👈 thoda upar but controlled */
+
+  width: calc(100% - 32px);
+  max-width: 420px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(18, 18, 18, 0.75);
+  backdrop-filter: blur(16px);
+
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow: 
+    0 10px 30px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+
   z-index: 50;
 }
 
 .bottom-nav__inner {
-  max-width: 720px;
-  margin: 0 auto;
+  width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
 .bottom-nav__item {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-secondary);
+
   text-decoration: none;
-  gap: 2px;
+  color: #9ca3af;
+
+  gap: 4px;
+  transition: all 0.3s ease;
 }
 
-.bottom-nav__item.is-active { color: var(--color-text); }
+/* Hover */
+.bottom-nav__item:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+}
 
-.bottom-nav__icon { line-height: 0; }
+/* Active */
+.bottom-nav__item.is-active {
+  color: #ffffff;
+}
 
-.bottom-nav__label { font-size: 12px; }
+/* Glow background for active */
+.bottom-nav__item.is-active::after {
+  content: '';
+  position: absolute;
+  inset: 8px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  z-index: -1;
+}
 
-/* Safe area for iOS */
+/* Icon */
+.bottom-nav__icon {
+  transition: all 0.3s ease;
+}
+
+/* Active icon animation */
+.bottom-nav__item.is-active .bottom-nav__icon {
+  transform: scale(1.2);
+}
+
+/* Label */
+.bottom-nav__label {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.bottom-nav__item.is-active .bottom-nav__label {
+  opacity: 1;
+  font-weight: 500;
+}
+
+/* iOS safe area */
 @supports(padding: max(0px)) {
-  .bottom-nav { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+  .bottom-nav {
+    padding-bottom: max(env(safe-area-inset-bottom), 6px);
+  }
 }
